@@ -4,18 +4,16 @@ import { UserRole } from "src/utils/constant/enum/user-role.enum";
 
 @Entity('user')
 export class UserEntity extends BaseEntity {
-
-
     @PrimaryGeneratedColumn()
     id: number
 
     @Column()
-    name: string
+    username: string
 
     @Column()
     email: string
 
-    @Column({ select: false })
+    @Column()
     password?: string;
 
     @Column({ default: UserRole.User })

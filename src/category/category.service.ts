@@ -17,6 +17,10 @@ export class CategoryService {
         return this.category.find()
     }
 
+    async getDetailCategory(id: number) {
+        return this.category.findOneBy({ id })
+    }
+
     async createCategory(data: CategoryRequestDTO) {
         return this.category.save(data)
     }

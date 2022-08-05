@@ -3,35 +3,19 @@ import { IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
 export class ProductRequestBodyDTO {
     @IsNotEmpty()
     @IsString()
-    name: string;
+    name?: string;
 
     @IsNotEmpty()
     @IsString()
-    discription: string;
+    description?: string;
 
     @IsNotEmpty()
     @IsInt()
     @IsNumber()
-    discount: number;
+    discount?: number;
 
     @IsNotEmpty()
     @IsInt()
     @IsNumber()
-    category_id: any;
-
-    @IsNotEmpty()
-    @IsInt()
-    @IsNumber()
-    quantity: number;
-
-    @IsNotEmpty()
-    @IsInt()
-    @IsNumber()
-    colors: Array<number>;
-
-    @IsNotEmpty()
-    @IsInt()
-    @IsNumber()
-    sizes: Array<number>;
-
+    category_id?: any;
 }

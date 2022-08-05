@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Param, Post, Put, Query } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query } from '@nestjs/common';
 import { ColorService } from './color.service';
 import { ColorBody } from './interface/color.interface';
 
@@ -11,6 +11,11 @@ export class ColorController {
         return this.colorService.getAllColor();
     }
 
+    @Get('/detail/:id')
+    getDetailColor(@Param('id') id: number) {
+        return this.colorService.getDetailColor(id);
+    }
+
     @Post('/create')
     createColor(@Body() colorBody: ColorBody) {
         return this.colorService.createColor(colorBody)
@@ -19,5 +24,10 @@ export class ColorController {
     @Put('/update/:id')
     updateColor(@Body() colorBody: ColorBody, @Param() id: string) {
         return this.colorService.updateColor(colorBody, id)
+    }
+
+    @Delete('/delete/:id')
+    deleteColor(@Param('id') id: number) {
+        return this.colorService.deleteColor(id)
     }
 }

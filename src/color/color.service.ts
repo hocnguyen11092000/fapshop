@@ -15,11 +15,27 @@ export class ColorService {
         return this.color.find()
     }
 
+    async getDetailColor(id: number) {
+        return this.color.findOneBy({ id })
+    }
+
     async createColor(colorBody) {
         return this.color.save(colorBody)
     }
 
-    async updateColor(colorBody, id) {
-        return id
+    async updateColor(colorBody, params) {
+        const color = await this.color.findOne({ where: { id: params.id } })
+
+        return this.color.save({
+            ...color,
+            ...colorBody,
+        });
+    }
+
+    async deleteColor(id: number) {
+        await this.color.delete({ id })
+        return {
+            success: true
+        }
     }
 }

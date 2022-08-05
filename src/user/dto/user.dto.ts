@@ -1,10 +1,10 @@
-import { IsBoolean, IsEmail, IsInt, IsNotEmpty, IsNumber, IsString } from "class-validator";
+import { IsBoolean, IsEmail, IsInt, isNotEmpty, IsNotEmpty, IsNumber, IsString } from "class-validator";
 import { UserRole } from "src/utils/constant/enum/user-role.enum";
 
 export class UserRequestBodyDTO {
     @IsNotEmpty()
     @IsString()
-    name: string;
+    username: string;
 
     @IsNotEmpty()
     @IsString()
@@ -17,6 +17,11 @@ export class UserRequestBodyDTO {
 
     @IsString()
     role?: UserRole
+}
 
+export class UpdateActiveUser {
 
+    @IsNotEmpty()
+    @IsBoolean()
+    isAvailable: boolean
 }

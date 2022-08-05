@@ -19,13 +19,13 @@ export class AppService {
   }
 
   async test() {
-    const color = await this.color.findOne({ where: { id: 1 } })
-    const product = await this.product.findOne({ where: { id: 1 }, relations: { colors: true } })
-    console.log(product);
-    product.colors = [...product.colors, color]
+    // const color = await this.color.findOne({ where: { id: 1 } })
+    // const product = await this.product.findOne({ where: { id: 1 }, relations: { colors: true } })
+    // console.log(product);
+    // product.colors = [...product.colors, color]
 
 
-    return await this.product.save(product)
+    // return await this.product.save(product)
 
   }
 }

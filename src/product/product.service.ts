@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { async } from 'rxjs';
 import { ColorEntity } from 'src/color/entity/color.schema';
@@ -22,7 +22,7 @@ export class ProductService {
 
     async getAllProduct(query) {
 
-        const resultPerpage = 3
+        const resultPerpage = 8
         const page = query.page || 1
         const skip = Number(page - 1) * resultPerpage
 
@@ -33,12 +33,12 @@ export class ProductService {
                 where: { name: Like('%' + keyword + '%') }, order: { id: "ASC" },
                 take: resultPerpage,
                 skip,
-                relations: {
-                    category_id: true,
-                    colors: true,
-                    sizes: true,
-                    images: true
-                },
+                relations: [
+                    'category_id',
+                    'images',
+                    'quantitys.size',
+                    'quantitys.color',
+                ],
             },
         );
 
@@ -51,33 +51,40 @@ export class ProductService {
         }
     }
 
-    async createProduct(data: ProductRequestBodyDTO) {
-
-        const product = this.product.create({
-            name: data.name,
-            discount: data.discount,
-            quantity: data.quantity,
-            description: data.discription,
-            category_id: data.category_id,
+    async getDetailProduct(id: number) {
+        return this.product.findOne({
+            where: { id }, relations: [
+                'category_id',
+                'images',
+                'quantitys.size',
+                'quantitys.color',
+            ],
         })
+    }
 
-        const result = await this.product.save(product)
+    async createProduct(data: ProductRequestBodyDTO) {
+        return this.product.save(data)
+    }
 
-        data.colors.map(async (x) => {
-            const product = await this.product.findOne({ where: { id: result.id }, relations: { colors: true } })
+    async updateProduct(id: number, data: ProductRequestBodyDTO) {
+        const product = await this.product.findOneBy({ id })
 
-            product.colors = [...product.colors, await this.color.findOne({ where: { id: x } })]
-            await this.product.save(product)
+        return this.product.save({
+            ...product,
+            ...data
+        })
+    }
+
+    async deleteProduct(id: number) {
+        const product = await this.product.findOneBy({ id })
+
+        if (!product) {
+            throw new NotFoundException(['product not found'])
         }
-        )
 
-        data.sizes.map(async (x) => {
-            const product = await this.product.findOne({ where: { id: result.id }, relations: { sizes: true } })
-
-            product.sizes = [...product.sizes, await this.size.findOne({ where: { id: x } })]
-            await this.product.save(product)
+        await this.product.delete({ id })
+        return {
+            success: true
         }
-        )
-
     }
 }

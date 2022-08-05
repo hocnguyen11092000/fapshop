@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
@@ -11,10 +12,13 @@ import { ImageEntity } from './image/entity/image.schema';
 import { ImageModule } from './image/image.module';
 import { ProductEntity } from './product/entity/product.schema';
 import { ProductModule } from './product/product.module';
+import { QuantityEntity } from './quantity/entity/quantity.schema';
+import { QuantityModule } from './quantity/quantity.module';
 import { SizeEntity } from './size/entity/size.schema';
 import { SizeModule } from './size/size.module';
 import { UserEntity } from './user/entity/user.schema';
-import { UserrModule } from './user/user.module';
+import { RoleGuard } from './user/guards/roles.guard';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
@@ -26,11 +30,14 @@ import { UserrModule } from './user/user.module';
       password: '123456',
       database: 'fapshop',
       synchronize: true,
-      entities: [ProductEntity, CategoryEntity, ColorEntity, SizeEntity, ImageEntity, UserEntity]
+      entities: [ProductEntity, CategoryEntity, ColorEntity, SizeEntity, ImageEntity, UserEntity, QuantityEntity]
     }),
-    ProductModule, CloudinaryModule, ImageModule, ColorModule, SizeModule, CategoryModule, UserrModule
+    ProductModule, CloudinaryModule, ImageModule, ColorModule, SizeModule, CategoryModule, UserModule, QuantityModule
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, {
+    provide: APP_GUARD,
+    useClass: RoleGuard,
+  },],
 })
 export class AppModule { }
